@@ -15,9 +15,13 @@ public class CalculatorServiceImpl implements CalculatorService {
 	public ResponseDto add(DataDto data,HttpServletResponse response) {
 		ResponseDto resp= new ResponseDto();
 		try {
-			resp.setMessage("OK");
-			resp.setNumResult(2);
-			return resp;
+
+			Integer result=0;
+			for (int i=0;i<=data.getNums().size();i++) {
+				result=Math.addExact(i, result);
+			}
+			resp.setNumResult(result);
+
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -28,9 +32,11 @@ public class CalculatorServiceImpl implements CalculatorService {
 	public ResponseDto substract(DataDto data, HttpServletResponse response) {
 		ResponseDto resp= new ResponseDto();
 		try {
-			resp.setMessage("OK");
-			resp.setNumResult(3);
-			return resp;
+			Integer result=0;
+			for (int i=0;i<=data.getNums().size();i++) {
+				result=Math.subtractExact(i, result);
+			}
+			resp.setNumResult(result);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
