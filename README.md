@@ -1,1 +1,1 @@
-# AkkaTest
+# SanitasTest
