@@ -18,6 +18,8 @@ import com.test.sanitas.dto.DataDto;
 import com.test.sanitas.dto.ResponseDto;
 import com.test.sanitas.service.CalculatorService;
 
+import io.corp.calculator.TracerImpl;
+
 
 @Controller
 @RequestMapping("/calculator")
@@ -33,41 +35,43 @@ public class CalculatorController {
 	public ResponseEntity<BasicResponseDto> add(@Valid @RequestBody DataDto data, HttpServletRequest request, HttpServletResponse response) {
 		ResponseDto operation = new ResponseDto();
 		BasicResponseDto resp = new BasicResponseDto();
+		TracerImpl tracer =new TracerImpl();
 		try {
 			operation= calculatorService.add(data,response);
 			if (operation!=null) {
-				if (operation.getNumResult()!=null) {
-					resp.setMessage("The result of the operation is: "+operation.getNumResult());
-					resp.setNumResult(operation.getNumResult());
-				}else {
-					resp.setMessage(operation.getMessage());
-				}
+
+				resp.setMessage("The result of the operation is: "+operation.getNumResult());
+				resp.setNumResult(operation.getNumResult());
+
 			}
 			return new ResponseEntity<>(resp, HttpStatus.OK);
 		}catch (Exception e){
 			e.printStackTrace();
+			tracer.trace(e);
 			resp.setMessage("An error has occurred");
 			return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@RequestMapping(value="/substract",method = RequestMethod.POST, 
 			consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<BasicResponseDto> substract(@Valid @RequestBody DataDto data, HttpServletRequest request, HttpServletResponse response) {
 		ResponseDto operation = new ResponseDto();
 		BasicResponseDto resp = new BasicResponseDto();
+		TracerImpl tracer =new TracerImpl();
 		try {
 			operation= calculatorService.substract(data,response);
 			if (operation!=null) {
-				if (operation.getMessage()==null || operation.getMessage().isEmpty()) {
-					resp.setMessage("The result of the operation is: "+operation.getNumResult());
-					resp.setNumResult(operation.getNumResult());
-				}
+
+				resp.setMessage("The result of the operation is: "+operation.getNumResult());
+				resp.setNumResult(operation.getNumResult());
+
 			}
 			return new ResponseEntity<>(resp, HttpStatus.OK);
 		}catch (Exception e){
 			e.printStackTrace();
+			tracer.trace(e);
 			resp.setMessage("An error has occurred");
 			return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
