@@ -18,6 +18,8 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.test.sanitas.dto.ExceptionMessageDto;
 
+import io.corp.calculator.TracerImpl;
+
 @ControllerAdvice
 public class RestExceptionHandler { 
 
@@ -26,7 +28,8 @@ public class RestExceptionHandler {
 	
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptionMethod(Exception ex, WebRequest requset) {
-
+    	
+    TracerImpl tracer=new TracerImpl();
     ExceptionMessageDto exceptionMessage = new ExceptionMessageDto();
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     Date date= new Date();
@@ -50,7 +53,7 @@ public class RestExceptionHandler {
     exceptionMessage.setDate(DateFor.format(date));
     exceptionMessage.setError(ex.getClass().getCanonicalName());
     exceptionMessage.setPath(((ServletWebRequest) requset).getRequest().getServletPath());
-
+    tracer.trace(exceptionMessage);
     return new ResponseEntity<>(exceptionMessage, new HttpHeaders(), status);
   }
 }
